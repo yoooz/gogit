@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/go-git/go-git/v5"
@@ -9,8 +10,10 @@ import (
 )
 
 func main() {
+	flag.Parse()
+	path := flag.Args()[0]
 	r, _ := git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
-		URL: "../test",
+		URL: path,
 	})
 
 	ref, _ := r.Head()
