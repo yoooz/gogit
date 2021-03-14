@@ -1,3 +1,3 @@
 #!/bin/sh
 
-gogit /go/src/app/gogit
+gogit http://gitlab.local-docker.com:8929/root/clitest.git

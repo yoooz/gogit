@@ -1,0 +1,14 @@
+pages:
+  stage: deploy
+  before_script:
+    - docker build -t gogit .
+  script:
+    - docker container run --rm gogit | tee result
+    - mkdir .public
+    - cp -r * .public
+    - mv .public public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
