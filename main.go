@@ -14,6 +14,8 @@ func main() {
 	path := flag.Args()[0]
 	r, _ := git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
 		URL: path,
+		SingleBranch: true,
+		NoCheckout: false,
 	})
 
 	ref, _ := r.Head()
