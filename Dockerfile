@@ -10,8 +10,7 @@ RUN apk update && \
 COPY ./ ./gogit/
 COPY startup.sh .
 
-RUN cd gogit && go install -v .
-
-RUN chmod 744 gogit/startup.sh
+RUN cd /go/src/app/gogit && git checkout 
+RUN cd /go/src/app/gogit && go install -v .
 
 CMD ["/go/src/app/gogit/startup.sh"]
