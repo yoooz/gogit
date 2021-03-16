@@ -3,6 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"strconv"
+	"strings"
+
+	"encoding/json"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -22,17 +26,22 @@ func main() {
 	
 	cIter, _ := r.Log(&git.LogOptions{From: ref.Hash()})
 
-	authorMap := map[string][]string{}
+	commitListMap := map[string][]gitLogStruct{}
 
 
 	cIter.ForEach(func(c *object.Commit) error {
-		authorMap[c.Author.Name] = append(authorMap[c.Author.Name], c.Message)
+		message := strings.Fields(c.Message)
+		index, _ := strconv.Atoi(message[1])
+		log := gitLogStruct{ Hash: message[0], HistoryIndex: index }
+		commitListMap[c.Author.Name] = append(commitListMap[c.Author.Name], log)
 		return nil
 	})
 
-	for key, value := range authorMap {
-		fmt.Println(key)
-		fmt.Println(value)
-		fmt.Println()
-	}
+	json, _ := json.Marshal(commitListMap)
+	fmt.Println(string(json))
+}
+
+type gitLogStruct struct {
+	Hash string `json:"hash"`
+	HistoryIndex int `json:"historyIndex"`
 }
