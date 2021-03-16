@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -28,12 +29,15 @@ func main() {
 
 	commitListMap := map[string][]gitLogStruct{}
 
-
 	cIter.ForEach(func(c *object.Commit) error {
-		message := strings.Fields(c.Message)
-		index, _ := strconv.Atoi(message[1])
-		log := gitLogStruct{ Hash: message[0], HistoryIndex: index }
-		commitListMap[c.Author.Name] = append(commitListMap[c.Author.Name], log)
+		r := regexp.MustCompile(`.+ \d+`)
+		message := c.Message
+		if r.MatchString(message) {
+			splitedMessage := strings.Fields(message)
+			index, _ := strconv.Atoi(splitedMessage[1])
+			log := gitLogStruct{ Hash: splitedMessage[0], HistoryIndex: index }
+			commitListMap[c.Author.Name] = append(commitListMap[c.Author.Name], log)
+		}
 		return nil
 	})
 
